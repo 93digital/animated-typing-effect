@@ -7,7 +7,7 @@ Stable tag: trunk
 License: GPL v3
 License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
 
-Create an animated typing effect that allows words to be 'typed out/’ on to a post or page.
+Create an animated typing effect that allows words to be 'typed out’ on to a post or page.
 
 == Description ==
 
@@ -16,6 +16,8 @@ Typing Effect allows you to generate a shortcode that will 'type out' words on t
 Simply add your words or sentences, click 'Generate Shortcode' and copy and paste the shortcode into a page, post or text widget.
 
 You can also configure settings such as how quickly the typing effect takes place, delays before starting or backspacing, set the animation to loop repeatedly or randomise the order your words or sentences are typed out and deleted.
+
+To view a demo of the original animation [click here](http://www.mattboldt.com/demos/typed-js/)
 
 == Installation ==
 
