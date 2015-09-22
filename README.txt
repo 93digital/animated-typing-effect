@@ -46,3 +46,11 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 == Screenshots ==
 
 1. Generate a shortcode screen
+
+== Changelog ==
+
+= 1.1 =
+* Fixed typed script parameters
+
+= 1.0 =
+* First release

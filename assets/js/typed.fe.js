@@ -6,7 +6,7 @@
         if( key.substr( 0, 6 ) == "string" ) {
           strings.push( this.dataset[ key ] );
         } else {
-          options[ key ] = this.dataset[ key ];
+          options[ key ] = parseInt( this.dataset[ key ] );
         }
       }
 
