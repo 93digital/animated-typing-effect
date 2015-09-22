@@ -15,5 +15,5 @@
 
       $( this ).typed( options );
     });
-  })
+  });
 })(jQuery);
