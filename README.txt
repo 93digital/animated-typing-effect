@@ -7,7 +7,7 @@ Stable tag: trunk
 License: GPL v3
 License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
 
-Create an animated typing effect that allows words to be 'typed out’ on to a post or page.
+Create an animated typing effect that allows words to be 'typed out' on to a post or page.
 
 == Description ==
 
@@ -21,8 +21,8 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 
 == Installation ==
 
-1. Upload the typing-effect folder to the /wp-content/plugins/ directory
-2. Activate the Typing Effect plugin through the \'Plugins\' menu in WordPress
+1. Upload the animated-typing-effect folder to the /wp-content/plugins/ directory
+2. Activate the Typing Effect plugin through the 'Plugins' menu in WordPress
 3. Generate a shortcode by going to Typing Effect on the main menu
 
 == Frequently Asked Questions ==
@@ -33,7 +33,7 @@ Yes, you can enter HTML in the rows before generating a shortcode. You can also 
 
 Can I edit the settings of the animation?
 
-You can change a variety of settings such as the speed that the text is typed out, a delay before the animation begins, the speed at which the text is backspaced (deleted) and a delay before the backspacing begins. Ticking the 'Loop' box will mean the animation continues to repeat over and over. Entering a number in the 'Loop count' box will define how many times it will repeat - e.g. entering '3/’ would type out and then backspace the text 3 times.
+You can change a variety of settings such as the speed that the text is typed out, a delay before the animation begins, the speed at which the text is backspaced (deleted) and a delay before the backspacing begins. Ticking the 'Loop' box will mean the animation continues to repeat over and over. Entering a number in the 'Loop count' box will define how many times it will repeat - e.g. entering '3’ would type out and then backspace the text 3 times.
 
 Can I preview my animation?
 
