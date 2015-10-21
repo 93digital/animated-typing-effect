@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Typing Effect
- * Version: 1.1
+ * Version: 1.2
  * Plugin URI: http://93digital.co.uk/
  * Description: Animated typing effect plugin, allowing you to generate a shortcode that 'types' out words on your page or post. Based on Typed.js by Matt Boldt.
  * Author: 93digital
@@ -95,7 +95,7 @@ class nine93Typed {
     //Generate the javascript code
     foreach( $atts as $key => $value ) {
       $key = isset( $params[ $key ] ) ? $params[$key] : $key;
-      $span .= " data-{$key}=\"" . htmlentities( $value ) . '"';
+      $span .= " data-{$key}=\"" . addslashes( $value ) . '"';
     }
 
     return $span . "></span>";

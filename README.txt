@@ -50,6 +50,9 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 == Changelog ==
 
 = 1.1 =
+* Fixed issue with cyrillic text
+
+= 1.1 =
 * Fixed typed script parameters
 
 = 1.0 =
