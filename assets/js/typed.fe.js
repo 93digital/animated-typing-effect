@@ -4,7 +4,7 @@
       var options = {}, strings = [];
       for( var key in this.dataset ) {
         if( key.substr( 0, 6 ) == "string" ) {
-          strings.push( this.dataset[ key ] );
+          strings.push( this.dataset[ key ].replace( /&quot;/g, '"' ) );
         } else {
           options[ key ] = parseInt( this.dataset[ key ] );
         }

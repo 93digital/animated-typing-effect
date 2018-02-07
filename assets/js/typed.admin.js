@@ -56,7 +56,9 @@
     var strings = [];
 
     $inputs.each( function() {
-      strings.push( $( this ).val() );
+      const string = $(this).val().replace('&amp;', '&').replace('&', '&amp;');
+
+      strings.push( string );
     });
 
     //Set the parameters only if is not empty
@@ -92,7 +94,11 @@
         var values = options[key];
 
         values.forEach( function( v ) {
-          shortcode += " string" + i + "=\"" + v.replace( /'/g, "\\'") + "\"";
+          // Replace & with &amp; otherwise the browser freezes.
+          v = v.replace(/"/g, '&quot;');
+          v = v.replace('&amp;', '&'); // in case the user already used &amp;
+          v = v.replace('&', '&amp;');
+          shortcode += " string" + i + "=\"" + v + "\"";
 
           i++;
         } );

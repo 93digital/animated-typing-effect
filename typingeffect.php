@@ -90,12 +90,13 @@ class nine93Typed {
       'backdelay' => 'back-delay',
       'startdelay' => 'start-delay',
       'loopcount' => 'loop-count',
+      'shuffle' => 'shuffle',
     );
 
     //Generate the javascript code
     foreach( $atts as $key => $value ) {
       $key = isset( $params[ $key ] ) ? $params[$key] : $key;
-      $span .= " data-{$key}=\"" . addslashes( $value ) . '"';
+      $span .= " data-{$key}=\"" . $value . '"';
     }
 
     return $span . "></span>";
