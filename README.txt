@@ -2,7 +2,7 @@
 Contributors: 93digital, ceceppa
 Tags: animated typing effect, typewriter effect, typing effect plugin
 Requires at least: 3.5
-Tested up to: 4.3.1
+Tested up to: 4.9.4
 Stable tag: trunk
 License: GPL v3
 License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
