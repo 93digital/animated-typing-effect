@@ -410,7 +410,7 @@ registerBlockType('nine3/typing', {
             </PanelBody>
           </InspectorControls>
 
-          <div className={className}>
+          <div className={`typed-block ${className}`}>
             <span className="typed-wrapper"></span>
           </div>
         </Fragment>

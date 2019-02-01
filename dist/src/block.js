@@ -1660,7 +1660,7 @@ registerBlockType('nine3/typing', {
               }));
           }
         }))), React.createElement("div", {
-          className: className
+          className: "typed-block ".concat(className)
         }, React.createElement("span", {
           className: "typed-wrapper"
         })));
