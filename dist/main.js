@@ -1280,61 +1280,72 @@ var _wp$element = wp.element,
  */
 
 var blockAttributes = {
-  preview: {
+  loop: {
     type: 'boolean',
-    default: true
+    default: false
+  },
+  loopCount: {
+    type: 'number',
+    default: -1,
+    description: 'amount of loops (set -1 for Inifite)',
+    show: 'loop'
   },
   typeSpeed: {
     type: 'number',
-    default: 0
+    default: 0,
+    description: 'type speed in milliseconds'
   },
   startDelay: {
     type: 'number',
-    default: 0
+    default: 0,
+    description: 'time before typing starts in milliseconds'
   },
   backSpeed: {
     type: 'number',
-    default: 0
+    default: 0,
+    description: 'backspacing speed in milliseconds'
   },
   smartBackspace: {
     type: 'boolean',
-    default: true
+    default: true,
+    description: "only backspace what doesn't match the previous string"
   },
   shuffle: {
     type: 'boolean',
-    default: false
+    default: false,
+    description: 'shuffle the strings'
   },
   backDelay: {
     type: 'number',
-    default: 700
+    default: 700,
+    description: 'time before backspacing in milliseconds'
   },
   fadeOut: {
     type: 'boolean',
-    default: false
+    default: false,
+    description: 'Fade out instead of backspace'
   },
   fadeOutClass: {
     type: 'string',
-    default: 'typed-fade-out'
+    default: 'typed-fade-out',
+    description: 'css class for fade animation',
+    show: 'fadeOut'
   },
   fadeOutDelay: {
     type: 'number',
-    default: 500
+    default: 500,
+    description: 'Fade out delay in milliseconds',
+    show: 'fadeOut'
   },
-  shouwCursor: {
+  showCursor: {
     type: 'boolean',
     default: true
   },
   cursorChar: {
-    type: 'boolean',
-    default: true
-  },
-  autoInsertCss: {
-    type: 'boolean',
-    default: true
-  },
-  attr: {
     type: 'string',
-    default: ''
+    default: '|',
+    description: 'character for cursor',
+    show: 'showCursor'
   },
   contentType: {
     type: 'select',
@@ -1356,7 +1367,12 @@ registerBlockType('nine3/typing', {
   // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
   keywords: [__('Typing'), __('effect')],
   // the "type" key is not accessible inside the props.attributes but we need it to render the panel options properly
-  attributes: blockAttributes,
+  attributes: Object.assign({}, blockAttributes, {
+    previewMode: {
+      type: 'boolean',
+      default: true
+    }
+  }),
   multiple: true,
 
   /**
@@ -1384,6 +1400,8 @@ registerBlockType('nine3/typing', {
       _this.props = props;
       _this.addString = _this.addString.bind(_assertThisInitialized(_assertThisInitialized(_this)));
       _this.onStringChange = _this.onStringChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+      _this.animateNow = _this.animateNow.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+      _this._options = {};
       _this._timeout = null;
       return _this;
     } // Add a new string
@@ -1449,21 +1467,87 @@ registerBlockType('nine3/typing', {
         console.info(key, value, a);
       }
     }, {
+      key: "isEquivalent",
+      value: function isEquivalent(a, b) {
+        // Create arrays of property names
+        var aProps = Object.getOwnPropertyNames(a);
+        var bProps = Object.getOwnPropertyNames(b); // If number of properties is different,
+        // objects are not equivalent
+
+        if (aProps.length != bProps.length) {
+          return false;
+        }
+
+        for (var i = 0; i < aProps.length; i++) {
+          var propName = aProps[i]; // If values of same property are not equal,
+          // objects are not equivalent
+
+          if (a[propName] !== b[propName]) {
+            return false;
+          }
+        } // If we made it this far, objects
+        // are considered equivalent
+
+
+        return true;
+      }
+      /**
+       * Execute the animation
+       *
+       */
+
+    }, {
+      key: "animateNow",
+      value: function animateNow() {
+        this.initTyped(0);
+      }
+      /**
+       * Debounce the animation
+       */
+
+    }, {
       key: "initTyped",
       value: function initTyped() {
-        var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
-        var options = Object.assign({}, this.props.attributes);
+        var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 500;
         clearTimeout(this._timeout);
 
-        if (this.props.attributes.preview === false) {
+        if (this.props.attributes.previewMode === false && timeout > 0) {
           return;
         }
 
-        console.info(preview);
-        this._timeout = setTimeout(function (clientId) {
-          // const element = document.querySelector(`[data-block="${clientId}"]`)
-          new _typed2.default("[data-block=\"".concat(clientId, "\"]"), options);
-        }, timeout, this.props.clientId);
+        this._timeout = setTimeout(this._initTyped.bind(this, timeout), timeout);
+      }
+      /**
+       * Run the animation
+       */
+
+    }, {
+      key: "_initTyped",
+      value: function _initTyped(timeout) {
+        var options = Object.assign({}, this.props.attributes);
+
+        if (options.loopCount < 0) {
+          options.loopCount = Infinity;
+        }
+
+        if (this._typed) {
+          /**
+           * componentDidUpdate is called even if the data hasn't changed, like when the
+           * user click in or out of the component.
+           * We're making sure that something has changed just because is very annoying seeing the
+           * animation running when nothing has changed.
+           */
+          if (timeout > 0 && this.isEquivalent(this._options, options)) {
+            return;
+          }
+
+          this._typed.stop();
+
+          this._typed.destroy();
+        }
+
+        this._typed = new _typed2.default("[data-block=\"".concat(this.props.clientId, "\"] .typed-wrapper"), options);
+        this._options = options;
       }
       /**
        * Initialise Typed.js
@@ -1472,7 +1556,7 @@ registerBlockType('nine3/typing', {
     }, {
       key: "componentDidMount",
       value: function componentDidMount() {
-        this.initTyped(0);
+        this.initTyped(1000);
       }
     }, {
       key: "componentDidUpdate",
@@ -1488,12 +1572,22 @@ registerBlockType('nine3/typing', {
             className = _this$props.className,
             attributes = _this$props.attributes;
         var attributeKeys = Object.keys(blockAttributes).filter(function (key) {
-          return key !== 'strings';
+          return key !== 'strings' && key !== 'className';
         });
         return React.createElement(Fragment, null, React.createElement(InspectorControls, null, React.createElement(PanelBody, {
           title: __('Strings'),
           className: "typed-panel-body"
-        }, attributes.strings.map(function (string, index) {
+        }, React.createElement(PanelRow, {
+          className: "animate-row"
+        }, React.createElement(ToggleControl, {
+          label: "Preview Mode",
+          checked: attributes.previewMode,
+          onChange: this.onAttributeChange.bind(this, 'previewMode'),
+          toolip: "Automatically runs the animation when a parameter changes"
+        }), React.createElement(Button, {
+          isDefault: true,
+          onClick: this.animateNow
+        }, __('Animate!'))), attributes.strings.map(function (string, index) {
           return React.createElement("div", {
             className: "string-wrapper"
           }, React.createElement(TextControl, {
@@ -1520,6 +1614,11 @@ registerBlockType('nine3/typing', {
 
           var value = attributes[key];
           var type = blockAttributes[key].type;
+          var attribute = blockAttributes[key]; // Is it hidden?
+
+          if (attribute.show && attributes[attribute.show] === false) {
+            return;
+          }
 
           switch (type) {
             case 'boolean':
@@ -1528,7 +1627,8 @@ registerBlockType('nine3/typing', {
               }, React.createElement(ToggleControl, {
                 label: label,
                 checked: value,
-                onChange: _this2.onAttributeChange.bind(_this2, key)
+                onChange: _this2.onAttributeChange.bind(_this2, key),
+                help: attribute.description
               }));
 
             case 'select':
@@ -1538,34 +1638,32 @@ registerBlockType('nine3/typing', {
               }, React.createElement(SelectControl, {
                 label: label,
                 value: value,
-                options: blockAttributes[key].values.map(function (value) {
+                options: attribute.values.map(function (value) {
                   return {
                     label: value,
                     value: value
                   };
                 }),
-                onChange: _this2.onAttributeChange.bind(_this2, key)
+                onChange: _this2.onAttributeChange.bind(_this2, key),
+                help: attribute.description
               }));
 
             default:
               return React.createElement(PanelRow, {
                 key: key
               }, React.createElement(TextControl, {
-                type: type,
+                type: type === 'string' ? 'text' : type,
                 label: label,
                 value: value,
-                onChange: _this2.onAttributeChange.bind(_this2, key)
+                onChange: _this2.onAttributeChange.bind(_this2, key),
+                help: attribute.description
               }));
           }
         }))), React.createElement("div", {
           className: className
-        }, React.createElement("div", {
+        }, React.createElement("span", {
           className: "typed-wrapper"
-        }, attributes.strings.map(function (string, index) {
-          return React.createElement("p", {
-            key: index
-          }, string);
-        }))));
+        })));
       }
     }]);
 
@@ -1618,7 +1716,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56407" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49895" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

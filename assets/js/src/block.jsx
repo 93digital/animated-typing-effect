@@ -19,8 +19,8 @@ const {
   IconButton,
   PanelRow,
   ToggleControl,
-	SelectControl,
-	TextControl
+  SelectControl,
+  TextControl,
 } = wp.components;
 const { Fragment, Component } = wp.element;
 /**
@@ -37,61 +37,72 @@ const { Fragment, Component } = wp.element;
  *                             registered; otherwise `undefined`.
  */
 const blockAttributes = {
-  preview: {
+  loop: {
     type: 'boolean',
-    default: true,
+    default: false,
+  },
+  loopCount: {
+    type: 'number',
+    default: -1,
+    description: 'amount of loops (set -1 for Inifite)',
+    show: 'loop',
   },
   typeSpeed: {
     type: 'number',
     default: 0,
+    description: 'type speed in milliseconds',
   },
   startDelay: {
     type: 'number',
     default: 0,
+    description: 'time before typing starts in milliseconds',
   },
   backSpeed: {
     type: 'number',
     default: 0,
+    description: 'backspacing speed in milliseconds',
   },
   smartBackspace: {
     type: 'boolean',
     default: true,
+    description: "only backspace what doesn't match the previous string",
   },
   shuffle: {
     type: 'boolean',
     default: false,
+    description: 'shuffle the strings',
   },
   backDelay: {
     type: 'number',
     default: 700,
+    description: 'time before backspacing in milliseconds',
   },
   fadeOut: {
     type: 'boolean',
     default: false,
+    description: 'Fade out instead of backspace',
   },
   fadeOutClass: {
     type: 'string',
     default: 'typed-fade-out',
+    description: 'css class for fade animation',
+    show: 'fadeOut',
   },
   fadeOutDelay: {
     type: 'number',
     default: 500,
+    description: 'Fade out delay in milliseconds',
+    show: 'fadeOut',
   },
-  shouwCursor: {
+  showCursor: {
     type: 'boolean',
     default: true,
   },
   cursorChar: {
-    type: 'boolean',
-    default: true,
-  },
-  autoInsertCss: {
-    type: 'boolean',
-    default: true,
-  },
-  attr: {
     type: 'string',
-    default: '',
+    default: '|',
+    description: 'character for cursor',
+    show: 'showCursor',
   },
   contentType: {
     type: 'select',
@@ -112,7 +123,12 @@ registerBlockType('nine3/typing', {
   keywords: [__('Typing'), __('effect')],
 
   // the "type" key is not accessible inside the props.attributes but we need it to render the panel options properly
-  attributes: blockAttributes,
+  attributes: Object.assign({}, blockAttributes, {
+    previewMode: {
+      type: 'boolean',
+      default: true,
+    },
+  }),
 
   multiple: true,
 
@@ -134,7 +150,9 @@ registerBlockType('nine3/typing', {
 
       this.addString = this.addString.bind(this);
       this.onStringChange = this.onStringChange.bind(this);
+      this.animateNow = this.animateNow.bind(this);
 
+      this._options = {};
       this._timeout = null;
     }
 
@@ -188,26 +206,90 @@ registerBlockType('nine3/typing', {
       console.info(key, value, a);
     }
 
-    initTyped(timeout = 100) {
-      const options = Object.assign({}, this.props.attributes);
-      clearTimeout(this._timeout);
+    isEquivalent(a, b) {
+      // Create arrays of property names
+      var aProps = Object.getOwnPropertyNames(a);
+      var bProps = Object.getOwnPropertyNames(b);
 
-      if (this.props.attributes.preview === false) {
-        return;
+      // If number of properties is different,
+      // objects are not equivalent
+      if (aProps.length != bProps.length) {
+        return false;
       }
 
-      console.info(preview);
-      this._timeout = setTimeout(clientId => {
-        // const element = document.querySelector(`[data-block="${clientId}"]`)
-        new Typed(`[data-block="${clientId}"]`, options);
-      }, timeout, this.props.clientId);
+      for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+          return false;
+        }
+      }
+
+      // If we made it this far, objects
+      // are considered equivalent
+      return true;
+    }
+
+    /**
+     * Execute the animation
+     *
+     */
+    animateNow() {
+      this.initTyped(0);
+    }
+
+    /**
+     * Debounce the animation
+     */
+    initTyped(timeout = 500) {
+      clearTimeout(this._timeout);
+
+      if (this.props.attributes.previewMode === false && timeout > 0) {
+        return;
+      }
+      this._timeout = setTimeout(this._initTyped.bind(this, timeout), timeout);
+    }
+
+    /**
+     * Run the animation
+     */
+    _initTyped(timeout) {
+      const options = Object.assign({}, this.props.attributes);
+
+      if (options.loopCount < 0) {
+        options.loopCount = Infinity;
+      }
+
+      if (this._typed) {
+        /**
+         * componentDidUpdate is called even if the data hasn't changed, like when the
+         * user click in or out of the component.
+         * We're making sure that something has changed just because is very annoying seeing the
+         * animation running when nothing has changed.
+         */
+        if (timeout > 0 && this.isEquivalent(this._options, options)) {
+          return;
+        }
+
+        this._typed.stop();
+        this._typed.destroy();
+      }
+
+      this._typed = new Typed(
+        `[data-block="${this.props.clientId}"] .typed-wrapper`,
+        options
+      );
+
+      this._options = options;
     }
 
     /**
      * Initialise Typed.js
      */
     componentDidMount() {
-      this.initTyped(0);
+      this.initTyped(1000);
     }
 
     componentDidUpdate() {
@@ -217,13 +299,30 @@ registerBlockType('nine3/typing', {
     render() {
       const { className, attributes } = this.props;
       const attributeKeys = Object.keys(blockAttributes).filter(
-        key => key !== 'strings'
+        key => key !== 'strings' && key !== 'className'
       );
 
       return (
         <Fragment>
           <InspectorControls>
             <PanelBody title={__('Strings')} className="typed-panel-body">
+              <PanelRow className="animate-row">
+                <ToggleControl
+                  label="Preview Mode"
+                  checked={attributes.previewMode}
+                  onChange={this.onAttributeChange.bind(this, 'previewMode')}
+                  toolip="Automatically runs the animation when a parameter changes"
+                />
+
+                {/* Trigger the animation */}
+                <Button
+                    isDefault
+                    onClick={this.animateNow}
+                  >
+                  {__('Animate!')}
+                </Button>
+              </PanelRow>
+
               {attributes.strings.map((string, index) => {
                 return (
                   <div className="string-wrapper">
@@ -257,51 +356,53 @@ registerBlockType('nine3/typing', {
                 const label = camel.charAt(0).toUpperCase() + camel.slice(1); // capitalise first letter.
                 const value = attributes[key];
                 const type = blockAttributes[key].type;
+                const attribute = blockAttributes[key];
+
+                // Is it hidden?
+                if (attribute.show && attributes[attribute.show] === false) {
+                  return;
+                }
 
                 switch (type) {
                   case 'boolean':
                     return (
-                      <PanelRow
-                        key={key}
-                      >
+                      <PanelRow key={key}>
                         <ToggleControl
                           label={label}
                           checked={value}
                           onChange={this.onAttributeChange.bind(this, key)}
+                          help={attribute.description}
                         />
                       </PanelRow>
                     );
                   case 'select':
                     // contentType?
                     return (
-                      <PanelRow
-                        key={key}
-                      >
+                      <PanelRow key={key}>
                         <SelectControl
                           label={label}
                           value={value}
-                          options={blockAttributes[key].values.map(value => {
+                          options={attribute.values.map(value => {
                             return {
                               label: value,
                               value,
                             };
                           })}
                           onChange={this.onAttributeChange.bind(this, key)}
+                          help={attribute.description}
                         />
                       </PanelRow>
                     );
                   default:
                     return (
-                      <PanelRow
-                        key={key}
-                      >
+                      <PanelRow key={key}>
                         <TextControl
-                          type={type}
+                          type={type === 'string' ? 'text' : type}
                           label={label}
                           value={value}
                           onChange={this.onAttributeChange.bind(this, key)}
+                          help={attribute.description}
                         />
-
                       </PanelRow>
                     );
                 }
@@ -310,13 +411,7 @@ registerBlockType('nine3/typing', {
           </InspectorControls>
 
           <div className={className}>
-          <div className="typed-wrapper">
-              {attributes.strings.map((string, index) => {
-                return (
-                  <p key={index}>{string}</p>
-                )
-              })}
-            </div>
+            <span className="typed-wrapper"></span>
           </div>
         </Fragment>
       );

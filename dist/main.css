@@ -16,6 +16,45 @@
   margin-top: 1.25rem;
   text-align: center;
 }
+.typed-panel-body .animate-row {
+  align-items: baseline;
+}
+
+.typed-cursor {
+  opacity: 1;
+}
+
+.typed-cursor.typed-cursor--blink {
+  animation: typedjsBlink 0.7s infinite;
+  -webkit-animation: typedjsBlink 0.7s infinite;
+  animation: typedjsBlink 0.7s infinite;
+}
+
+@keyframes typedjsBlink {
+  50% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes typedjsBlink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.typed-fade-out {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.typed-cursor.typed-cursor--blink.typed-fade-out {
+  -webkit-animation: 0;
+  animation: 0;
+}
 
 #nine3digital-typed dl {
   display: block;
