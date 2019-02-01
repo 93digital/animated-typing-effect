@@ -49,6 +49,10 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 
 == Changelog ==
 
+= 2.0 =
+* Update typed.js library
+* Add support for Gutenberg
+
 = 1.1 =
 * Fixed issue with cyrillic text
 

@@ -1,0 +1,29 @@
+{
+  "name": "@93digital/animated-typing-effect",
+  "version": "1.0.0",
+  "description": "=== Typing Effect === Contributors: 93digital, ceceppa Tags: animated typing effect, typewriter effect, typing effect plugin Requires at least: 3.5 Tested up to: 4.9.4 Stable tag: trunk License: GPL v3 License URI: http://www.gnu.org/licenses/gpl-3.0.en.html",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel watch assets/js/main.js assets/js/src/block.jsx",
+    "build": "parcel build assets/js/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/93digital/animated-typing-effect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/93digital/animated-typing-effect/issues"
+  },
+  "homepage": "https://github.com/93digital/animated-typing-effect#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.11.0",
+    "postcss-nested": "^4.1.1",
+    "postcss-plugin": "^1.0.0",
+    "sass": "^1.16.1",
+    "typed.js": "^2.0.10"
+  },
+  "dependencies": {}
+}

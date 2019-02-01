@@ -9,7 +9,11 @@
  * Text Domain: typing-effect
  * Domain Path: /languages/
  * License: GPL v3
+ *
+ * @package nine3/typingeffect
  */
+
+namespace Nine3\TypingEffect;
 
 /**
  * Typing Effect Plugin
@@ -30,77 +34,99 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-  echo 'Hi there! I\'m just a plugin.';
-  exit;
+	echo 'Hi there! I\'m just a plugin.';
+	exit;
 }
 
-class nine93Typed {
-  public function __construct() {
-    add_action( 'admin_menu', array( & $this, 'add_menu_pages' ) );
+class Typed {
+	public function __construct() {
+		add_action( 'admin_menu', array( & $this, 'add_menu_pages' ) );
 
-    //Scripts
-    add_action( 'admin_enqueue_scripts', array( &$this, 'register_admin_scripts' ) );
-    add_action( 'wp_enqueue_scripts', array( &$this, 'register_scripts' ) );
+		// Scripts.
+		add_action( 'admin_enqueue_scripts', array( & $this, 'register_admin_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( & $this, 'register_scripts' ) );
 
-    //Register the shortcode
-    add_shortcode( 'typed' , array( & $this, 'do_shortcode' ) );
-  }
+		// Register the shortcode
+		add_shortcode( 'typed', array( & $this, 'do_shortcode' ) );
+	}
 
-  function add_menu_pages() {
-    add_menu_page('Typing Effect', __( 'Typing Effect', '93digital-typed' ), 'administrator', '93digital-typed', array( & $this, 'shortcode_generator') );
-  }
+	function add_menu_pages() {
+		add_menu_page( 'Typing Effect', __( 'Typing Effect', '93digital-typed' ), 'administrator', '93digital-typed', array( & $this, 'shortcode_generator' ) );
+	}
 
-  function register_scripts() {
-    wp_enqueue_style( 'typed-cursor', plugins_url( 'assets/css/cursor.css', __FILE__ ) );
+	function register_scripts() {
+		wp_enqueue_style( 'typed-cursor', plugins_url( '/dist/main.css', __FILE__ ) );
 
-    wp_enqueue_script( 'typed-script', plugins_url( 'assets/js/typed.js', __FILE__ ), array( 'jquery' ), 1.0, true );
-    wp_enqueue_script( 'typed-frontend', plugins_url( 'assets/js/typed.fe.js', __FILE__ ), array( 'jquery' ), 1.0, true );
-  }
+		wp_enqueue_script( 'typed-script', plugins_url( 'assets/js/typed.js', __FILE__ ), array( 'jquery' ), 1.0, true );
+		wp_enqueue_script( 'typed-frontend', plugins_url( 'assets/js/typed.fe.js', __FILE__ ), array( 'jquery' ), 1.0, true );
 
-  function register_admin_scripts() {
-      wp_enqueue_script( '93typed-script', plugins_url( 'assets/js/typed.admin.js', __FILE__ ), array( 'jquery' ), 1.0, true );
-      wp_enqueue_script( 'typed-script', plugins_url( 'assets/js/typed.js', __FILE__ ), array( 'jquery' ), 1.0, true );
+		die();
+	}
 
-      wp_enqueue_style( '93typed-css', plugins_url( 'assets/css/style.css', __FILE__ ) );
-  }
+	function register_admin_scripts() {
+		wp_enqueue_style( '93typed-css', plugins_url( '/dist/main.css', __FILE__ ) );
+	}
 
-  function shortcode_settings() {
-    require_once( 'layout/shortcode-settings.php' );
-  }
+	function shortcode_settings() {
+		require_once 'layout/shortcode-settings.php';
+	}
 
-  function shortcode_generator() {
-    add_meta_box( 'nine3digital-preview', __( 'Preview', 'ceceppaml' ), array( & $this, 'typed_preview' ), 'typed_metaboxes' );
-    add_meta_box( 'nine3digital-typed', __( 'Settings', 'ceceppaml' ), array( & $this, 'shortcode_settings' ), 'typed_metaboxes' );
+	function shortcode_generator() {
+		add_meta_box( 'nine3digital-preview', __( 'Preview', 'ceceppaml' ), array( & $this, 'typed_preview' ), 'typed_metaboxes' );
+		add_meta_box( 'nine3digital-typed', __( 'Settings', 'ceceppaml' ), array( & $this, 'shortcode_settings' ), 'typed_metaboxes' );
 
-    require_once( 'layout/shortcode.php' );
-  }
+		require_once 'layout/shortcode.php';
+	}
 
-  function typed_preview() {
-    echo '<div id="preview"><span class="preview"></span></div>';
-    echo '<input type="button" name="update" value="Generate Shortcode" class="button button-large button-primary" />';
-  }
+	function typed_preview() {
+		echo '<div id="preview"><span class="preview"></span></div>';
+		echo '<input type="button" name="update" value="Generate Shortcode" class="button button-large button-primary" />';
+	}
 
-  function do_shortcode( $atts ) {
-    $span = '<span class="typed-me"';
-    $options = array();
+	function do_shortcode( $atts ) {
+		$span    = '<span class="typed-me"';
+		$options = array();
 
-    //WP Convert the parameters in lowercase format, but I need in camel case
-    $params = array(
-      'typespeed' => 'type-speed',
-      'backdelay' => 'back-delay',
-      'startdelay' => 'start-delay',
-      'loopcount' => 'loop-count',
-      'shuffle' => 'shuffle',
-    );
+		// WP Convert the parameters in lowercase format, but I need in camel case
+		$params = array(
+			'typespeed'  => 'type-speed',
+			'backdelay'  => 'back-delay',
+			'startdelay' => 'start-delay',
+			'loopcount'  => 'loop-count',
+			'shuffle'    => 'shuffle',
+		);
 
-    //Generate the javascript code
-    foreach( $atts as $key => $value ) {
-      $key = isset( $params[ $key ] ) ? $params[$key] : $key;
-      $span .= " data-{$key}=\"" . $value . '"';
-    }
+		// Generate the javascript code
+		foreach ( $atts as $key => $value ) {
+			$key   = isset( $params[ $key ] ) ? $params[ $key ] : $key;
+			$span .= " data-{$key}=\"" . $value . '"';
+		}
 
-    return $span . "></span>";
-  }
+		return $span . '></span>';
+	}
 }
 
-new nine93Typed();
+new \Nine3\TypingEffect\Typed();
+
+/**
+ * Enqueue Gutenberg block assets for backend editor.
+ *
+ * `wp-blocks`: includes block type registration and related functions.
+ * `wp-element`: includes the WordPress Element abstraction for describing the structure of your blocks.
+ * `wp-i18n`: To internationalize the block's text.
+ *
+ * @since 1.0.0
+ */
+function enqueue_block() {
+	// Scripts.
+	wp_enqueue_script(
+		'nine3-typing-effect',
+		plugins_url( '/dist/main.js', __FILE__ ),
+		array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
+		'2.0',
+		true
+	);
+}
+
+// Hook: Editor assets.
+add_action( 'enqueue_block_editor_assets', '\Nine3\TypingEffect\enqueue_block' );
