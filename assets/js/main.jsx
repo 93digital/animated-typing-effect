@@ -429,5 +429,17 @@ registerBlockType('nine3/typing', {
    * @param {object} props Gutenberg props.
    * @return {JSX} JSX block.
    */
-  save: () => null,
+  save: props => {
+    const {attributes} = props;
+
+    return (
+      <div className={`typed-block ${className}`}>
+        <span className="typed-wrapper">
+          {attributes.strings.map(string => {
+            <p>{string}</p>
+          })}
+        </span>
+      </div>
+    )
+  },
 });
