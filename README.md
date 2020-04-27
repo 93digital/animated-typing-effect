@@ -113,3 +113,5 @@ Similar to `git diff`, it shows difference within each changed file, compared to
 ## Useful links
 - https://developer.wordpress.org/plugins/wordpress-org/how-to-use-subversion/
 - https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/
+
+- https://stackoverflow.com/questions/86049/how-do-i-ignore-files-in-subversion
