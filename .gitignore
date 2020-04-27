@@ -1,0 +1,7 @@
+# Config files
+.DS_Store
+
+# SVN related bits
+.svn/
+branches/*
+tags/*
