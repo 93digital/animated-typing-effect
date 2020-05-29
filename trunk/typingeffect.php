@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Typing Effect
- * Version: 1.3.1
+ * Version: 1.3.2
  * Plugin URI: http://93digital.co.uk/
  * Description: Animated typing effect plugin, allowing you to generate a shortcode that 'types' out words on your page or post. Based on Typed.js by Matt Boldt.
  * Author: 93digital
