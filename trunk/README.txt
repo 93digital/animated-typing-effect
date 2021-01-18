@@ -49,6 +49,9 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 
 == Changelog ==
 
+= 1.3.4 =
+* Bug fix which caused HTML elements to be escaped. This bug occured in the 1.3.3 release.
+
 = 1.3.3 =
 * Tested with WordPress v5.6
 
