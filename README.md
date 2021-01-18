@@ -8,50 +8,56 @@ The plugin uses both Git and SVN versioning tools.
 
 
 ## SVN
-Subversion is the VCS of choice for WordPress and the tool which plugin developers must use to update plugins on the directory.
+Subversion (SVN) is the VCS of choice for WordPress and the tool which plugin developers must use to update plugins on the directory.
 
+<<<<<<< HEAD
 Projects versioned using SVN typically consist of the follwoing directories in the root of the project:
+=======
+Projects versioned using SVN typically consist of the follwoing root directories (PLEASE DO NOT REMOVE OR RENAME ANY OF THE DIRECTORIES, AS THEY ARE REQUIRED BY WORDPRESS):
+>>>>>>> 5dcae98ed8515a319dc3b5a90bed01e42eb87bd7
 
 ### assets/
 Contains screenshots, plugin headers and plugin icons used by WordPress. The filenames are specific to what WordPress requires.
 
 ### branches/
-This is for divergent branches of code, only availabe for developers. This shouldn't need to be touched as we version the plugin ourselves between releases.
+This is for divergent branches of code, only availabe for developers. This shouldn't need to be touched as we would ideally create a Git branch on Bitbucket instead.
 
 ### tags/
-Contains older versions of the plugin. WordPress uses this to make older versions available to users. Each directory within this should be named after a version number and contain the contents of the trunk/ directory at the time of that release.
+Contains older versions of the plugin. WordPress uses this to make older versions available to users. Each directory within this should be named after a version number and contain the contents of the `trunk/` directory at the time of that release.
 
 ### trunk/
-The main man, the codebase for the plugin. This is where changes and updates are made.
+The main man, the codebase for the plugin. This is where changes and updates need to be made.
 
 __PLEASE DO NOT REMOVE OR RENAME ANY OF THE DIRECTORIES, AS THEY ARE REQUIRED BY WORDPRESS__
 
 
 ## Git
-Git is used to keep the plugin's codebase versioned with our own instance of Bitbucket, within the 93Developers workspace.
+We use Git instead of SVN to version the plugin in our own instance of Bitbucket, within the 93Developers workspace.
 
-This allows all developers to easily access the codebase if required and also allows us to commit and push chnages between official versions. Git branching should be used whenever a developer works on the plugin, even if it just a simple monthly update.
+This allows all developers to easily access the codebase if required and also allows us to commit and push chnages between official versions. Git branching should be used whenever a developer works on the plugin, even if it just to test the plugin with the latest version of WordPress (more on version numbering below).
+
+SVN is only used to deploy the plugin to the WordPress plugin repository.
 
 ### Master branch
-The Master branch should mirror the live codebase of the plugin at all times. Developers should never work directly on Master, instead they shuld be branching off master and only merging their changes in top master when the changes are ready to be pushed to the official plugin repository via SVN.
+The Master branch should mirror the live codebase of the plugin at all times. Developers should never work directly on Master, instead they should be creating a branch to work on amd only merge their changes back into Master when the changes are ready to be pushed to the official plugin repository via SVN.
 
 Currently there are no checks in place to prevent developers commiting or pushing to master - this will be added in time - so for the time being there needs to be an element of trust that everyone is following these instructions.
 
 ### Development branches
-All development needs to be done on "version" branches. These branches should be named after the current plugin version you are working on. The version number consists of 3 numbers seperated by dots (e.g. 3.1.12).
+All development needs to be done on a "version" branches. These branches should be named after the current plugin version you are working on. The version number format should be `vX.X.X`, where each `X` represents and integer (e.g. `v3.1.12`).
 
 The types of verisions are as follows:
 
 1. __Major update:__ This is the left number of the 3 and should only be incremented when a major new feature is added to the plugin, an exisiting feature gets a major overhaul or the plugin code base is rebuilt.  
-> _e.g. if the current version is 1.2.5 and a major new feature is being developed then this should be done on a branch named 2.0.0, which will be the plugin's new version number when it is completed, merged to master and updated in the WordPress plugin directory._
+> _e.g. If the current version is `v1.2.5` and a major new feature is being developed then this should be done on a branch named `v2.0.0`. This will then be the plugin's new version number when the work is complete, merged to master and updated in the WordPress plugin directory._
 2. __Minor update:__ This is the middle number of the 3 and should only be incremeneted when undertaking a minor feature update or fixing a major bug within the codebase.  
-> _e.g. If the current version is 1.2.5 and a bug is found or reported then then the fix for this should be done on a new branch named 1.3.0, which will be the plugin's new version number when it is completed, merged to master and updated in the WordPress plugin directory._
-3. __Revision:__ This is the right number of the 3 and is incremented on every minor revision of the plugin. So when the plugin is tested and updated on a monthly basis (even if no code has been updated) or small bugs fixes (one-liners etc.).  
-> _e.g. If the current version is 1.2.5 and a monthly test and update is due then this should be done on a new branch names 1.2.6, which will be the plugin's new version number once tested and updated, merged to master and updated in the WordPress plugin directory._
+> _e.g. If the current version is `v1.2.5` and a bug is found or reported then then the fix for this should be done on a new branch named `v1.3.0`. This will then be the plugin's new version number when the work is complete, merged to master and updated in the WordPress plugin directory._
+3. __Revision:__ This is the right number of the 3 and is incremented on every minor revision of the plugin, usually when the plugin is tested and updated on the latest version of WordPress (even if no code has been updated in the plugin) or for small bugs fixes (one-liners etc.).  
+> _e.g. If the current version is `v1.2.5` and the plugin is to be tested with the latest version of WordPress then the new branch should be `v1.2.6`. This will then be the plugin's new version number when the work is complete, merged to master and updated in the WordPress plugin directory._
 
 
 ## Updating the plugin
-The following steps should be followed when attempting to implement and official update to the plugin within the WordPress plugin directory.
+The following steps should be followed when officially updating the plugin on for WordPress.
 
 ### Methodology
 1. Pull down the latest version of the master branch from Bitbucket via Git. It is a good idea to check for any outstanding branches in Bitbucket and, if there are any, check the current status of that branch with the developer who made the last commit as it may have implications on the work you are wanting to do or the version number of your release.
