@@ -95,9 +95,9 @@
 
         values.forEach( function( v ) {
           // Replace & with &amp; otherwise the browser freezes.
-          v = v.replace(/"/g, '&quot;');
-          v = v.replace('&amp;', '&'); // in case the user already used &amp;
+          var v = v.replace('&amp;', '&'); // in case the user already used &amp;
           v = v.replace('&', '&amp;');
+          v = v.replace(/"/g, '&quot;');
           shortcode += " string" + i + "=\"" + v + "\"";
 
           i++;
