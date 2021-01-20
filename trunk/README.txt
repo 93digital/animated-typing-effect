@@ -49,6 +49,9 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 
 == Changelog ==
 
+= 1.3.5 =
+* Bug fix to patch a legacy bug from 1.3.1 which caused html elements to not to be rendered correctly within the typed text. This bug was not related to the one patched in 1.3.4.
+
 = 1.3.4 =
 * Bug fix which caused HTML elements to be escaped. This bug occured in the 1.3.3 release.
 
