@@ -2,7 +2,7 @@
 Contributors: 93digital
 Tags: animated typing effect, typewriter effect, typing effect plugin
 Requires at least: 3.5
-Tested up to: 5.6
+Tested up to: 5.4
 Stable tag: trunk
 License: GPL v3
 License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -10,6 +10,8 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
 Create an animated typing effect that allows words to be 'typed out' on to a post or page.
 
 == Description ==
+
+**This plugin is no longer be supported from v1.3.6.**
 
 Typing Effect allows you to generate a shortcode that will 'type out' words on to a page or post, in a widget or directly in a theme or template file. The plugin is based on the Typed.js typing animation script by Matt Boldt.
 
@@ -48,6 +50,9 @@ To view a demo of the original animation [click here](http://www.mattboldt.com/d
 1. Generate a shortcode screen
 
 == Changelog ==
+
+= 1.3.6 = 
+* Plugin abandoned and not longer supported! We are keeping it publicly available due to its popularity. We hope to start developing a v2 in the coming year or so.
 
 = 1.3.5 =
 * Bug fix to patch a legacy bug from 1.3.1 which caused html elements to not to be rendered correctly within the typed text. This bug was not related to the one patched in 1.3.4.
