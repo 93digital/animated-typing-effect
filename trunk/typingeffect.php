@@ -83,6 +83,11 @@ class nine93Typed {
     $span = '<span class="typed-me"';
     $options = array();
 
+    /**
+     * List of allowed attributes.
+     *
+     * @version 1.3.7
+     */
     $allowed_settings = [
       'typespeed',
       'startdelay',
@@ -106,6 +111,7 @@ class nine93Typed {
     //Generate the javascript code
     foreach( $atts as $key => $value ) {
       if ( strpos( $key, 'string' ) !== 0 && ! in_array( $key, $allowed_settings ) ) {
+        // Attribute not recognised so skip adding it as a HTML attr.
         continue;
       }
       $key = isset( $params[ $key ] ) ? $params[$key] : $key;
