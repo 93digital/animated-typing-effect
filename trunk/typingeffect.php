@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Typing Effect
- * Version: 1.3.6
+ * Version: 1.3.7
  * Plugin URI: http://93digital.co.uk/
  * Description: Animated typing effect plugin, allowing you to generate a shortcode that 'types' out words on your page or post. Based on Typed.js by Matt Boldt.
  * Author: 93digital
@@ -83,19 +83,33 @@ class nine93Typed {
     $span = '<span class="typed-me"';
     $options = array();
 
+    $allowed_settings = [
+      'typespeed',
+      'startdelay',
+      'backspeed',
+      'backdelay',
+      'loopcount',
+      'loop',
+      'shuffle',
+    ];
+
     //WP Convert the parameters in lowercase format, but I need in camel case
     $params = array(
       'typespeed' => 'type-speed',
       'backdelay' => 'back-delay',
+      'backspeed' => 'back-speed',
       'startdelay' => 'start-delay',
       'loopcount' => 'loop-count',
       'shuffle' => 'shuffle',
     );
-
+    
     //Generate the javascript code
     foreach( $atts as $key => $value ) {
+      if ( strpos( $key, 'string' ) !== 0 && ! in_array( $key, $allowed_settings ) ) {
+        continue;
+      }
       $key = isset( $params[ $key ] ) ? $params[$key] : $key;
-      $span .= " data-{$key}=\"" . $value . '"';
+      $span .= " data-{$key}=\"" . esc_attr( $value ) . '"';
     }
 
     return $span . "></span>";
